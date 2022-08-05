@@ -155,7 +155,6 @@ runs:
             RESULT=${BASH_REMATCH[2]} ;
 
             if [[ "$BUILDING" == "true" ]] && [[ "$JUST_TRIGGER" == true ]]; then 
-                echo "${BUILD_URL}"
                 echo "::set-output name=build-url::${BUILD_URL}"
                 echo "Job is running. build-url is set. Exiting process..."
                 exit 0
