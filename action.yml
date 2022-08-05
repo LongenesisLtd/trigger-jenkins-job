@@ -26,6 +26,7 @@ inputs:
 outputs:
   build-url:
     description: 'build url for jenkins job. is set only when just-trigger is true'
+    value: ${{ steps.trigger-jenkins-job-using-api.outputs.build-url }}
   
 runs:
   using: "composite"
