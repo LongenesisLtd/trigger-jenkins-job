@@ -210,7 +210,7 @@ runs:
 
         echo "Dumping logs"
         curl -s -X GET -H "Authorization: Basic ${JENKINS_TOKEN}" "${BUILD_URL}logText/progressiveText"
-        exit EXIT_CODE
+        exit $EXIT_CODE
       shell: bash
 branding:
   icon: 'arrow-down-circle'
