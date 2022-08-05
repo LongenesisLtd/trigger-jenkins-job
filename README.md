@@ -1,6 +1,6 @@
 # Trigger Jenkins Job - A GitHub Action
 
-The [Trigger Jenkins Job](https://github.com/mickeygoussetorg/trigger-jenkins-job) is a [composite run step custom action](https://docs.github.com/en/actions/creating-actions/creating-a-composite-run-steps-action) that can be used to trigger a Jenkins job, wait for it to complete, and return the results.  Please make sure to read this README completely, as there are some caveats to using this action.
+The [Trigger Jenkins Job](https://github.com/LongenesisLtd/trigger-jenkins-job) is a [composite run step custom action](https://docs.github.com/en/actions/creating-actions/creating-a-composite-run-steps-action) that can be used to trigger a Jenkins job, wait for it to complete, and return the results.  Please make sure to read this README completely, as there are some caveats to using this action.
 
 ## Caveats
 
