@@ -9,7 +9,6 @@ The following are known issues with this action:
 - The action only works on Linux runners
 - The Linux runners must have `curl` & `jq` installed
 - Currently the action only works with jobs with no parameters. Parameters will be available in a future 
-- Jenkins must have [Pipeline: REST API Plugin](https://plugins.jenkins.io/pipeline-rest-api/) installed
 
 ## Example Workflow
 
