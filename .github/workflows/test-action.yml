@@ -17,7 +17,7 @@ jobs:
       - id: testjenkinsaction
         uses: LongenesisLtd/trigger-jenkins-job@v1
         with:
-          jenkins-server:  "${{ secrets.JENKINS_SERVER }}" # URL of the jenkins server
+          jenkins-url:  "${{ secrets.JENKINS_SERVER }}" # URL of the jenkins server
           jenkins-job: "mySampleApp" # The name of the jenkins job to run
           jenkins-basic-auth: "${{ secrets.JENKINS_TOKEN }}" # basic auth encodedd
           poll-time: 10 # how often to poll the jenkins server for results
