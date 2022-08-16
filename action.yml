@@ -167,26 +167,39 @@ runs:
             exit 1 
         fi
         
+        LOG_LENGTH=0;
+
         while [ "$BUILDING" == "true" ]
         do 
             
             
             #WAIT POLL_TIME SECONDS
-            echo "pause for $POLL_TIME seconds"
-            echo "--------------------------------------"
+            # echo "pause for $POLL_TIME seconds"
+            # echo "--------------------------------------"
             sleep $POLL_TIME
 
+            LOG_TEXT=$(curl -i -s -X GET -H "Authorization: Basic ${JENKINS_TOKEN}" "${BUILD_URL}logText/progressiveText?start=${LOG_LENGTH}")
+            LOG_REGEX="x-text-size:\s*([0-9]+)"
+            if [[ $LOG_TEXT =~ $LOG_REGEX ]]; then
+                LOG_LENGTH=${BASH_REMATCH[1]} ;
+                # echo $LOG_LENGTH
+                # echo "--------------------------------------"
+                
+            fi
+            # just removing first 10 line because i cant seperate headers another way
+            echo "$LOG_TEXT" | sed -e '1,10d'
+
             #Get the status
-            echo "Query Build Job Status"
-            echo "--------------------------------------"
+            # echo "Query Build Job Status"
+            # echo "--------------------------------------"
             JOBSTATUSJSON=$(curl -s -X GET -H "Authorization: Basic ${JENKINS_TOKEN}" "$BUILD_URL/api/json?pretty=true")
 
             regex="\"building\"\s*:\s*([a-z]+).*?\"result\"\s*:\s*\"?([a-zA-Z]+)\"?."
             if [[ $JOBSTATUSJSON =~ $regex ]]; then
                 if [[ $VERBOSE == true ]]; then
-                  echo "Job Status"
-                  echo "building: " ${BASH_REMATCH[1]} ;
-                  echo "result: " ${BASH_REMATCH[2]} ;
+                echo "Job Status"
+                echo "building: " ${BASH_REMATCH[1]} ;
+                echo "result: " ${BASH_REMATCH[2]} ;
                 fi
                 BUILDING=${BASH_REMATCH[1]} ;
                 RESULT=${BASH_REMATCH[2]} ;
@@ -208,9 +221,7 @@ runs:
                 EXIT_CODE=1
                 ;;
         esac
-
-        echo "Dumping logs"
-        curl -s -X GET -H "Authorization: Basic ${JENKINS_TOKEN}" "${BUILD_URL}logText/progressiveText"
+        
         exit $EXIT_CODE
       shell: bash
 branding:
