@@ -23,4 +23,6 @@ jobs:
           poll-time: 10 # how often to poll the jenkins server for results
           verbose: true # true/false - turns on extra logging
           just-trigger: true # true/false - turns on just trigger so you can track stages in different jobs
+          buildwithParameters: true # true/false - jenkins pipeline using parameters
+          parameters: "SECRET_ID=123-431,ENVIRONMENT=test" # jenkins pipeline parameters, currently just strings that you can pass in --data
       

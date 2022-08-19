@@ -22,8 +22,8 @@ inputs:
     description: 'true/false - turns on just trigger so you can track stages in different jobs'
     required: false
     default: false
-  buildwithParameters: # true/false - just triggers and checks if started. Won't check further results. Can be used when status is checked in different job 
-    description: 'true/false - turns on just trigger so you can track stages in different jobs'
+  buildwithParameters: # true/false - jenkins pipeline using parameters
+    description: 'true/false - jenkins pipeline using parameters'
     required: false
     default: false
   parameters: # parameters for build
@@ -49,21 +49,24 @@ runs:
         VERBOSE=${{ inputs.verbose }}
         JUST_TRIGGER=${{ inputs.just-trigger }}
         BUILD_WITH_PARAMETERS=${{ inputs.buildwithParameters }}
-        PARAMETERS=${{ inupts.parameters }}
+        PARAMETERS="${{ inputs.parameters }}"
 
         #STEP 1: Trigger the Jenkins Job
         #This will return a 201 if the job is created, so we need to test for this
         #Generate Crumb value
         echo "Triggering Jenkins Job..."
         CRUMB=`curl -s -H "Authorization: Basic ${JENKINS_TOKEN}" $JENKINS_URL'/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)'`
-        if BUILD_WITH_PARAMETERS ; then 
-          DATA_PARAMS="--data $(echo $PARAMETERS | sed 's/\,/ --data /g')"
-          if [ -z $PARAMETERS ]; then
-            DATA_PARAMS=""
-          fi
-          TRIGGERJOBHEADER=$(curl -I -s -X POST -H "Authorization: Basic ${JENKINS_TOKEN}"  -H "$CRUMB" $DATA_PARAMS "$JENKINS_URL"/job/"$JENKINS_JOB_NAME"/buildWithParameters)
+        if [[ $BUILD_WITH_PARAMETERS == true ]] ; then 
+          
+          IFS=","
+          for keypair in $PARAMETERS; do
+            DATA_PARAMS+=( -d $keypair )
+            # DATA_PARAMS+=( --data $(echo $keypair | cut -d "=" -f 1)=\"$(echo $keypair | cut -d "=" -f 2)\" )
+          done
+
+          TRIGGERJOBHEADER=$(curl -i -s -X POST -H "Authorization: Basic ${JENKINS_TOKEN}" -H "$CRUMB" "$JENKINS_URL/job/$JENKINS_JOB_NAME/buildWithParameters" "${DATA_PARAMS[@]}" )
         else
-          TRIGGERJOBHEADER=$(curl -I -s -X POST -H "Authorization: Basic ${JENKINS_TOKEN}"  -H "$CRUMB" "$JENKINS_URL"/job/"$JENKINS_JOB_NAME"/build)
+          TRIGGERJOBHEADER=$(curl -i -s -X POST -H "Authorization: Basic ${JENKINS_TOKEN}"  -H "$CRUMB" "$JENKINS_URL"/job/"$JENKINS_JOB_NAME"/build)
         fi
 
         if [[ $VERBOSE == true ]]; then
@@ -80,6 +83,10 @@ runs:
         if [[ "${TRIGGERJOBHEADER}" == *"201"* ]]; then
             echo "Job triggered successfully"
             echo "--------------------------------------"
+        elif [[ "${TRIGGERJOBHEADER}" == *"303"* ]]; then
+            echo "Request redirected. Maybe queue is full"
+            echo "--------------------------------------"
+            exit 1
         else
             echo "201 NOT FOUND. Exiting script with error"
             echo "--------------------------------------"
@@ -112,7 +119,7 @@ runs:
         if [[ $VERBOSE == true ]]; then
             echo "BUILDJSON:"
             echo "--------------------------------------"
-            echo $BUILDJSON | jq .
+            echo $BUILDJSON
             echo "--------------------------------------"
         fi
 
@@ -158,7 +165,7 @@ runs:
         if [[ $VERBOSE == true ]]; then
             echo "JOBSTATUSJSON:"
             echo "--------------------------------------"
-            echo $JOBSTATUSJSON | jq .
+            echo $JOBSTATUSJSON 
             echo "--------------------------------------"
         fi
 

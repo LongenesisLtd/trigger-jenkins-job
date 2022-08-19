@@ -7,8 +7,7 @@ The [Trigger Jenkins Job](https://github.com/LongenesisLtd/trigger-jenkins-job) 
 The following are known issues with this action:
 
 - The action only works on Linux runners
-- The Linux runners must have `curl` & `jq` installed
-- Currently the action only works with jobs with no parameters. Parameters will be available in a future 
+- The Linux runners must have `curl` installed
 
 ## Example Workflow
 
@@ -26,6 +25,8 @@ jobs:
           poll-time: 10 # how often to poll the jenkins server for results
           verbose: true # true/false - turns on verbose logging
           just-trigger: true # true/false - turns on just trigger so you can track stages in different jobs
+          buildwithParameters: true # true/false - jenkins pipeline using parameters
+          parameters: "SECRET_ID=123-431,ENVIRONMENT=test" # jenkins pipeline parameters, currently just strings that you can pass in --data
 ```
 
 ## Input Variables
@@ -38,6 +39,8 @@ Variable Name | Description
 **poll-time** | Time, in seconds, of how often the action should poll the Jenkins job to see if it has completed
 **verbose** | true/false. This value, when true, enables extra logging in the build output. By default it is false, meaning minimal logging
 **just-trigger** | true/false - turns on just trigger so you can track stages in different jobs
+**buildwithParameters** | true/false # is jenkins pipeline using parameters
+**parameters** | jenkins pipeline parameters, currently just strings that you can pass in --data
 
 ## Background [from original author]
 
