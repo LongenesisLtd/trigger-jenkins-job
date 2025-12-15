@@ -7,7 +7,7 @@ The [Trigger Jenkins Job](https://github.com/LongenesisLtd/trigger-jenkins-job) 
 The following are known issues with this action:
 
 - The action only works on Linux runners
-- The Linux runners must have `curl` installed
+- The Linux runners must have `curl` and `jq` installed
 
 ## Example Workflow
 
