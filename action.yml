@@ -125,7 +125,7 @@ runs:
             if [[ $VERBOSE == true ]]; then
                 echo "BUILDJSON:"
                 echo "--------------------------------------"
-                echo $BUILDJSON | jq .
+                echo $JSON | jq .
                 echo "--------------------------------------"
             fi
 
@@ -139,6 +139,8 @@ runs:
                 echo "$BUILD_URL"
                 echo "--------------------------------------"
               fi
+
+              break
             fi
 
             # Optional: detect cancellation
