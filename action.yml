@@ -125,7 +125,7 @@ runs:
             if [[ $VERBOSE == true ]]; then
                 echo "BUILDJSON:"
                 echo "--------------------------------------"
-                echo $JSON | jq .
+                echo $JSON 
                 echo "--------------------------------------"
             fi
 
