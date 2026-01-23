@@ -42,6 +42,7 @@ runs:
     - id: trigger-jenkins-job-using-api
       run: |
         #Parameters
+        set +x
         JENKINS_URL="${{ inputs.jenkins-url }}"
         JENKINS_JOB_NAME="${{ inputs.jenkins-job }}"
         JENKINS_TOKEN="${{ inputs.jenkins-basic-auth }}"
